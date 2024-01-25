@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Function to set host-name
+set_hostname() {
+    hostnamectl set-hostname ${1}
+}
 
 # Function to add Kubernetes repository
 add_kubernetes_repo() {
@@ -93,6 +97,7 @@ generate_and_store_token() {
 
 
 # Call functions with error checking
+set_hostname "host-name" || { echo "Failed to set hostname"; exit 1; }
 add_kubernetes_repo || { echo "Failed to add Kubernetes repo"; exit 1; }
 install_dependencies || { echo "Failed to install dependencies"; exit 1; }
 configure_sysctl || { echo "Failed to configure sysctl"; exit 1; }
