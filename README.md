@@ -5,4 +5,11 @@ IN MASTER SERVER:-
 Pull the code
 add hostname in set_hostname function.
 add kubernetes version in install_dependencies function.
-and run the script ./master.sh
+and run the script ./master_node.sh
+
+
+IN SLAVE SERVER:-
+Pull the code
+add hostname in set_hostname function.
+update token in joining_as_node function(take from master server).
+and run the script ./slave_node.sh
