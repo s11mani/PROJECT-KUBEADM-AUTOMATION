@@ -22,7 +22,7 @@ EOF
 install_dependencies() {
     yum clean all && yum -y makecache
     yum -y install epel-release vim git curl wget
-    yum install -y kubelet-1.28.0 kubectl-1.28.0 kubeadm-1.28.0
+    yum install -y kubelet-${1} kubectl-${1} kubeadm-${1}
     setenforce 0
     sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
     sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
@@ -51,9 +51,9 @@ install_containerd() {
 }
 
 # Function to set hostname
-set_hostname() {
+add_hostname_config() {
     cat >> /etc/hosts <<EOF
-${1} ${2}
+$(hostname -I | awk '{print $1}') $(hostname)
 EOF
 }
 
@@ -85,7 +85,7 @@ apply_weave_network() {
 
 # Function to remove taint from master node
 remove_taint_from_master() {
-    kubectl taint node "${1}" node-role.kubernetes.io/control-plane:NoSchedule-
+    kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
 }
 
 # Function to generate and store Kubernetes token
@@ -94,18 +94,16 @@ generate_and_store_token() {
     kubeadm token create $(</root/.kube/token) --print-join-command > /root/.kube/join_command
 }
 
-
-
 # Call functions with error checking
-set_hostname "host-name" || { echo "Failed to set hostname"; exit 1; }
+set_hostname "hostname" || { echo "Failed to set hostname"; exit 1; }
 add_kubernetes_repo || { echo "Failed to add Kubernetes repo"; exit 1; }
-install_dependencies || { echo "Failed to install dependencies"; exit 1; }
+install_dependencies "1.28.0" || { echo "Failed to install dependencies"; exit 1; }
 configure_sysctl || { echo "Failed to configure sysctl"; exit 1; }
 install_containerd || { echo "Failed to install containerd"; exit 1; }
-set_hostname "10.10.10.10" "hostname" || { echo "Failed to set hostname"; exit 1; }
+add_hostname_config || { echo "Failed to set hostname"; exit 1; }
 configure_containerd || { echo "Failed to configure containerd"; exit 1; }
 initialize_kubernetes_cluster || { echo "Failed to initialize Kubernetes cluster"; exit 1; }
 apply_weave_network || { echo "Failed to apply weave network"; exit 1; }
-remove_taint_from_master "pppp" || { echo "Failed to remove taint from master"; exit 1; }
+remove_taint_from_master || { echo "Failed to remove taint from master"; exit 1; }
 generate_and_store_token || { echo "Failed to generate and store token"; exit 1; }
 echo "Kubernetes installation completed successfully."
