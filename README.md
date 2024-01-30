@@ -17,3 +17,6 @@ update source path ex:- /root/PROJECT-KUBEADM-AUTOMATION/common_func.sh
 update hostname in set_hostname function.
 update joining_as_node function with the token generated in master-server /root/.kube/join_command
 give permission then run the run the script ./slave.sh
+
+### ### ### ### ### ###
+MAKE SURE NETWORK CONNECTIVITY IS ENABLED BETWEEN TWO SERVERS
