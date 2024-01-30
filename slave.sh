@@ -1,13 +1,8 @@
-#### To join centos-8 server as a slave node to centos master server using kubeadm ####
-## get the token generated from master server and replace the token in joining_as_node function below.
+#### update below source path to call common functions ####
 
 #!/bin/bash
 
-source /path/to/master_node.sh
-
-joining_as_node() {
-    ${1}
-}
+source /path/to/common_func.sh
 
 # Call functions with error checking
 set_hostname "hostname" || { echo "Failed to set hostname"; exit 1; }
