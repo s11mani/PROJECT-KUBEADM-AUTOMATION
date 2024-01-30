@@ -90,10 +90,10 @@ remove_taint_from_master() {
 
 # Function to generate and store Kubernetes token
 generate_and_store_token() {
-    kubeadm token generate > /root/.kube/token
-    kubeadm token create $(</root/.kube/token) --print-join-command > /root/.kube/join_command
+    kubeadm token create $(kubeadm token generate) --print-join-command > /root/.kube/join_command
 }
 
+# Function to join slave node
 joining_as_node() {
     ${1}
 }
