@@ -6,7 +6,7 @@ source /path/to/PROJECT-KUBEADM-AUTOMATION/common_func.sh
 
 # Call functions with error checking
 set_hostname "master-node" || { echo "Failed to set hostname"; exit 1; }
-add_kubernetes_repo || { echo "Failed to add Kubernetes repo"; exit 1; }
+add_kubernetes_repo "1.28" || { echo "Failed to add Kubernetes repo"; exit 1; }
 install_dependencies "1.28.0" || { echo "Failed to install dependencies"; exit 1; }
 configure_sysctl || { echo "Failed to configure sysctl"; exit 1; }
 install_containerd || { echo "Failed to install containerd"; exit 1; }
